@@ -1,0 +1,639 @@
+:root {
+  --primary: #a855f7; /* Purple for dots and accents */
+  --primary-dark: #7e22ce;
+  --primary-glow: rgba(168, 85, 247, 0.4);
+  --bg: #0a0a0a;
+  --bg-card: #1a1a1a;
+  --text: #f5f5f5;
+  --text-muted: #737373;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --border: #2a2a2a;
+  --bat-color: #111111; /* Color of the bats */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #000;
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ========================
+   SCREENS (shared)
+   ======================== */
+.screen {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ========================
+   BLACK SCREEN (intro)
+   ======================== */
+.black-screen {
+  background: #000;
+  cursor: pointer;
+}
+
+.logo-reveal {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+              opacity 0.4s ease;
+  will-change: transform, opacity;
+}
+
+.logo-treasure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.logo-icon-big {
+  font-size: 80px;
+  filter: drop-shadow(0 0 30px var(--primary-glow));
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.logo-title {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  color: var(--text);
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  line-height: 1;
+}
+
+.logo-title-accent {
+  color: var(--primary);
+  text-shadow: 0 0 40px var(--primary-glow);
+  letter-spacing: 16px;
+}
+
+/* Tap dots */
+.tap-counter {
+  position: fixed;
+  bottom: 40px;
+  display: flex;
+  gap: 8px;
+}
+
+.tap-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #222;
+  transition: all 0.3s ease;
+}
+
+.tap-dot.active {
+  background: var(--primary);
+  box-shadow: 0 0 10px var(--primary-glow);
+  transform: scale(1.2);
+}
+
+/* ========================
+   LOGO SCREEN (tap to play)
+   ======================== */
+.logo-screen {
+  background: #000;
+  cursor: pointer;
+}
+
+.tap-to-play {
+  position: fixed;
+  bottom: 60px;
+  font-size: 16px;
+  color: var(--text-muted);
+  letter-spacing: 4px;
+  text-transform: lowercase;
+  animation: pulse 2s ease-in-out infinite, fadeInUp 0.5s ease;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================
+   HINT SCREEN
+   ======================== */
+.hint-screen {
+  background: var(--bg);
+  justify-content: space-between;
+  padding: 0;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.hint-section {
+  width: 100%;
+  padding: 12px 16px;
+  padding-top: max(12px, env(safe-area-inset-top));
+  flex-shrink: 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  z-index: 10;
+}
+
+.hint-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.hint-icon {
+  font-size: 20px;
+}
+
+.hint-header h2 {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.hint-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.hint-text {
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--text);
+  margin-bottom: 0;
+}
+
+.location-text {
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+/* ========================
+   CAMERA & CAPTURED SECTION
+   ======================== */
+.camera-section {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: #000;
+  overflow: hidden;
+}
+
+.camera-viewfinder {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: #000;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.camera-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Viewfinder corners */
+.viewfinder-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.viewfinder-corner {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-color: var(--primary);
+  border-style: solid;
+  border-width: 0;
+}
+
+.viewfinder-corner.tl {
+  top: 20px; left: 20px;
+  border-top-width: 3px;
+  border-left-width: 3px;
+  border-top-left-radius: 8px;
+}
+
+.viewfinder-corner.tr {
+  top: 20px; right: 20px;
+  border-top-width: 3px;
+  border-right-width: 3px;
+  border-top-right-radius: 8px;
+}
+
+.viewfinder-corner.bl {
+  bottom: 20px; left: 20px;
+  border-bottom-width: 3px;
+  border-left-width: 3px;
+  border-bottom-left-radius: 8px;
+}
+
+.viewfinder-corner.br {
+  bottom: 20px; right: 20px;
+  border-bottom-width: 3px;
+  border-right-width: 3px;
+  border-bottom-right-radius: 8px;
+}
+
+/* ========================
+   CAPTURED RESULT
+   ======================== */
+.captured-result {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: #000;
+  overflow: hidden;
+}
+
+.captured-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+.comparing-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  backdrop-filter: blur(4px);
+  z-index: 20;
+}
+
+.spinner {
+  width: 44px;
+  height: 44px;
+  border: 4px solid #333;
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.comparing-overlay p {
+  font-size: 15px;
+  color: var(--text);
+  font-weight: 600;
+  text-align: center;
+  padding: 0 16px;
+}
+
+.match-result-banner {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.95);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  z-index: 15;
+  border: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+}
+
+.match-result-banner.success {
+  border-color: var(--success);
+}
+
+.match-result-banner.fail {
+  border-color: var(--danger);
+}
+
+.match-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.match-result-banner p {
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--text);
+  margin: 0;
+}
+
+/* ========================
+   WARNING MESSAGE
+   ======================== */
+.warning-message {
+  width: 100%;
+  padding: 8px 16px;
+  background: rgba(234, 88, 12, 0.25);
+  border-top: 1px solid rgba(234, 88, 12, 0.6);
+  border-bottom: 1px solid rgba(234, 88, 12, 0.6);
+  text-align: center;
+  flex-shrink: 0;
+  z-index: 25;
+}
+
+.warning-message p {
+  color: #fdba74;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* ========================
+   ACTION BAR (ALWAYS PINNED AT BOTTOM)
+   ======================== */
+.action-buttons {
+  width: 100%;
+  padding: 12px 16px;
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(10, 10, 10, 0.98);
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  z-index: 30;
+}
+
+.action-btn-secondary {
+  flex: 1;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.action-btn-secondary:active {
+  background: #333;
+}
+
+.action-btn-primary {
+  flex: 1;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--primary);
+  background: var(--primary);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 4px 14px var(--primary-glow);
+  transition: all 0.2s;
+}
+
+.action-btn-primary:active {
+  background: var(--primary-dark);
+}
+
+.action-btn-disabled {
+  opacity: 0.6;
+}
+
+/* Capture round button */
+.capture-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  background: transparent;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.1s;
+}
+
+.capture-btn:active {
+  transform: scale(0.92);
+}
+
+.capture-btn-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #fff;
+}
+
+/* ========================
+   RESPONSIVE
+   ======================== */
+@media (min-width: 481px) {
+  .screen {
+    max-width: 480px;
+    margin: 0 auto;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+  }
+}
+
+
+/* ========================
+   BAT ANIMATION OVERLAY
+   ======================== */
+.bat-animation-screen {
+  background: #000;
+  position: relative;
+}
+
+.bat-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Individual bats flying at the camera */
+.bat {
+  position: absolute;
+  font-size: 40px;
+  animation: batZoom 2.5s cubic-bezier(0.5, 0, 0.5, 1) forwards;
+  opacity: 0;
+}
+
+@keyframes batZoom {
+  0% {
+    transform: scale(0.1) translate(var(--tx-start), var(--ty-start));
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  60% {
+    transform: scale(20) translate(var(--tx-end), var(--ty-end));
+    opacity: 1;
+  }
+  100% {
+    transform: scale(50) translate(var(--tx-end), var(--ty-end));
+    opacity: 0;
+  }
+}
+
+.loading-ai {
+  font-size: 13px;
+  color: var(--primary);
+  margin-top: 10px;
+  animation: pulse 1.5s infinite;
+}
+
+.debug-text {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 5px;
+  font-family: monospace;
+}
+
+.next-btn {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary-dark);
+}
+
+.next-btn:active {
+  background: var(--primary-dark);
+}
+
+.location-text {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+  color: var(--primary-light, #c084fc);
+  font-style: italic;
+}
+
+.success-auto-advance {
+  color: var(--success);
+  font-size: 13px;
+  margin-top: 10px;
+  animation: pulse 1s infinite;
+}
+
+/* ========================
+   REVIEW SCREEN
+   ======================== */
+.review-screen {
+  padding: 20px;
+  text-align: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+  height: 100vh;
+  display: block;
+}
+
+.review-screen h2 {
+  color: var(--primary);
+  margin-top: 40px;
+  font-size: 28px;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.gallery-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gallery-item img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.gallery-item p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text);
+  font-weight: bold;
+}
