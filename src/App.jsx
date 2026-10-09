@@ -5,11 +5,14 @@ import './App.css'
 
 // Game stages
 const STAGE_INSTALL = 'install'
+const STAGE_PIN = 'pin'
 const STAGE_BLACK = 'black'        
 const STAGE_BAT_ANIMATION = 'bats' 
 const STAGE_LOGO_READY = 'ready'   
 const STAGE_HINT = 'hint'          
-const STAGE_REVIEW = 'review'      
+const STAGE_REVIEW = 'review'
+
+const ACCESS_PIN = '1110'      
 
 // Challenges configuration
 const CHALLENGES = [
@@ -87,11 +90,40 @@ function App() {
     window.navigator.standalone === true
   )
 
-  const [stage, setStage] = useState(() => isStandalone ? STAGE_BLACK : STAGE_INSTALL)
+  const [stage, setStage] = useState(() => isStandalone ? STAGE_PIN : STAGE_INSTALL)
   const [tapCount, setTapCount] = useState(0)
   const [showTapToPlay, setShowTapToPlay] = useState(false)
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [showIosGuide, setShowIosGuide] = useState(false)
+  
+  // PIN code state
+  const [pin, setPin] = useState('')
+  const [pinError, setPinError] = useState(false)
+
+  const handlePinDigit = (digit) => {
+    if (pin.length >= 4) return
+    const newPin = pin + digit
+    setPin(newPin)
+    setPinError(false)
+
+    if (newPin.length === 4) {
+      if (newPin === ACCESS_PIN) {
+        setTimeout(() => {
+          setStage(STAGE_BLACK)
+        }, 300)
+      } else {
+        setTimeout(() => {
+          setPinError(true)
+          setPin('')
+        }, 400)
+      }
+    }
+  }
+
+  const handlePinBackspace = () => {
+    setPin(prev => prev.slice(0, -1))
+    setPinError(false)
+  }
   
   // Game state
   const [currentChallengeIndex, setCurrentChallengeIndex] = useState(0)
@@ -443,8 +475,8 @@ Pokud je požadovaný předmět na fotce skutečně vidět (i částečně, v ru
             <button className="install-btn-main" onClick={handleInstallClick}>
               📲 Nainstalovat do mobilu
             </button>
-            <button className="install-btn-sub" onClick={() => setStage(STAGE_BLACK)}>
-              🎮 Hrát rovnou v prohlížeči ➡️
+            <button className="install-btn-sub" onClick={() => setStage(STAGE_PIN)}>
+              🎮 Vstoupit do hry ➡️
             </button>
           </div>
 
@@ -464,6 +496,66 @@ Pokud je požadovaný předmět na fotce skutečně vidět (i částečně, v ru
               </div>
             </div>
           )}
+        </div>
+      </div>
+    )
+  }
+
+  // =====================
+  // RENDER: PIN SCREEN (Zabezpečení kódem 1110)
+  // =====================
+  if (stage === STAGE_PIN) {
+    return (
+      <div className="screen pin-screen">
+        <div className="pin-card">
+          <div className="pin-icon">🔐</div>
+          <h2>Tajný kód</h2>
+          <p>Pro vstup do hry zadej 4místný PIN kód:</p>
+
+          <div className={`pin-dots ${pinError ? 'pin-dots-error' : ''}`}>
+            {[0, 1, 2, 3].map((idx) => (
+              <span
+                key={idx}
+                className={`pin-dot ${idx < pin.length ? 'filled' : ''} ${pinError ? 'error' : ''}`}
+              />
+            ))}
+          </div>
+
+          {pinError && (
+            <p className="pin-error-text">❌ Špatný kód! Zkus to znovu.</p>
+          )}
+
+          <div className="pin-keypad">
+            {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((digit) => (
+              <button
+                key={digit}
+                className="pin-key"
+                onClick={() => handlePinDigit(digit)}
+              >
+                {digit}
+              </button>
+            ))}
+            <button
+              className="pin-key pin-key-empty"
+              onClick={() => setStage(STAGE_INSTALL)}
+              title="Zpět"
+            >
+              ↩️
+            </button>
+            <button
+              className="pin-key"
+              onClick={() => handlePinDigit('0')}
+            >
+              0
+            </button>
+            <button
+              className="pin-key pin-key-backspace"
+              onClick={handlePinBackspace}
+              title="Smazat"
+            >
+              ⌫
+            </button>
+          </div>
         </div>
       </div>
     )

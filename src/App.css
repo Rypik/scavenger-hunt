@@ -766,3 +766,142 @@ body {
   color: var(--text);
   font-weight: bold;
 }
+
+/* ========================
+   PIN SCREEN
+   ======================== */
+.pin-screen {
+  background: radial-gradient(circle at center, #1e1136 0%, #0a0a0a 85%);
+  padding: 20px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pin-card {
+  background: rgba(22, 22, 22, 0.95);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 28px 20px;
+  width: 100%;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85);
+  gap: 12px;
+}
+
+.pin-icon {
+  font-size: 40px;
+  margin-bottom: -4px;
+}
+
+.pin-card h2 {
+  font-size: 22px;
+  margin: 0;
+  color: #fff;
+  font-weight: 800;
+}
+
+.pin-card p {
+  font-size: 13px;
+  color: #a3a3a3;
+  margin: 0;
+}
+
+.pin-dots {
+  display: flex;
+  gap: 16px;
+  margin: 12px 0 6px 0;
+}
+
+.pin-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: transparent;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pin-dot.filled {
+  background: var(--primary);
+  border-color: var(--primary);
+  transform: scale(1.15);
+  box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.pin-dot.error {
+  background: var(--danger);
+  border-color: var(--danger);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+}
+
+.pin-dots-error {
+  animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+.pin-error-text {
+  color: var(--danger);
+  font-size: 13px;
+  font-weight: 700;
+  margin: -4px 0 4px 0;
+  animation: fadeIn 0.2s ease;
+}
+
+.pin-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 270px;
+  margin-top: 8px;
+}
+
+.pin-key {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pin-key:active {
+  background: #333;
+  transform: scale(0.92);
+}
+
+.pin-key-backspace {
+  font-size: 20px;
+  color: #a3a3a3;
+  background: transparent;
+  border-color: transparent;
+}
+
+.pin-key-backspace:active {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.pin-key-empty {
+  font-size: 18px;
+  color: #a3a3a3;
+  background: transparent;
+  border-color: transparent;
+}
