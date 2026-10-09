@@ -580,6 +580,135 @@ body {
   font-style: italic;
 }
 
+/* ========================
+   INSTALL SCREEN
+   ======================== */
+.install-screen {
+  background: radial-gradient(circle at center, #1e1136 0%, #0a0a0a 80%);
+  padding: 24px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.install-card {
+  background: rgba(22, 22, 22, 0.95);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 32px 24px;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
+  gap: 16px;
+}
+
+.install-badge {
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid var(--primary);
+  color: #c084fc;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.install-desc {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #a3a3a3;
+  margin: 0;
+}
+
+.install-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.install-btn-main {
+  width: 100%;
+  padding: 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #a855f7, #7e22ce);
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4);
+  transition: transform 0.1s, box-shadow 0.2s;
+}
+
+.install-btn-main:active {
+  transform: scale(0.97);
+}
+
+.install-btn-sub {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.install-btn-sub:active {
+  background: #2a2a2a;
+}
+
+/* iOS Guide Modal */
+.ios-guide-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.ios-guide-box {
+  background: var(--bg-card);
+  border: 1px solid var(--primary);
+  border-radius: 20px;
+  padding: 24px;
+  width: 100%;
+  max-width: 320px;
+  text-align: left;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.9);
+}
+
+.ios-guide-box h3 {
+  font-size: 17px;
+  color: #fff;
+  margin-top: 0;
+  margin-bottom: 14px;
+}
+
+.ios-guide-box ol {
+  padding-left: 20px;
+  color: #d4d4d4;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.ios-guide-box ol li b {
+  color: var(--primary-light, #c084fc);
+}
+
 .success-auto-advance {
   color: var(--success);
   font-size: 13px;

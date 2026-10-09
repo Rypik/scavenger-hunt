@@ -4,6 +4,7 @@ import * as mobilenet from '@tensorflow-models/mobilenet'
 import './App.css'
 
 // Game stages
+const STAGE_INSTALL = 'install'
 const STAGE_BLACK = 'black'        
 const STAGE_BAT_ANIMATION = 'bats' 
 const STAGE_LOGO_READY = 'ready'   
@@ -80,9 +81,17 @@ const playBatSound = () => {
 }
 
 function App() {
-  const [stage, setStage] = useState(STAGE_BLACK)
+  // Pokud už aplikace běží jako nainstalovaná (standalone), přeskočíme rovnou na černou obrazovku
+  const isStandalone = typeof window !== 'undefined' && (
+    window.matchMedia('(display-mode: standalone)').matches || 
+    window.navigator.standalone === true
+  )
+
+  const [stage, setStage] = useState(() => isStandalone ? STAGE_BLACK : STAGE_INSTALL)
   const [tapCount, setTapCount] = useState(0)
   const [showTapToPlay, setShowTapToPlay] = useState(false)
+  const [deferredPrompt, setDeferredPrompt] = useState(null)
+  const [showIosGuide, setShowIosGuide] = useState(false)
   
   // Game state
   const [currentChallengeIndex, setCurrentChallengeIndex] = useState(0)
@@ -102,6 +111,29 @@ function App() {
 
   const MAX_TAPS = 10
   const currentChallenge = CHALLENGES[currentChallengeIndex]
+
+  // Zachycení instalačního promptu pro Android / Chrome
+  useEffect(() => {
+    const handleBeforeInstall = (e) => {
+      e.preventDefault()
+      setDeferredPrompt(e)
+    }
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall)
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall)
+  }, [])
+
+  const handleInstallClick = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt()
+      const { outcome } = await deferredPrompt.userChoice
+      if (outcome === 'accepted') {
+        setDeferredPrompt(null)
+      }
+    } else {
+      // Pro iOS nebo prohlížeče bez nativního promptu zobrazíme jednoduchý návod
+      setShowIosGuide(true)
+    }
+  }
 
   // =====================
   // STAGE: BLACK SCREEN
@@ -387,6 +419,55 @@ Pokud je požadovaný předmět na fotce skutečně vidět (i částečně, v ru
       startCamera()
     }
   }, [stage, capturedImage])
+
+  // =====================
+  // RENDER: INSTALL SCREEN (Vstupní stránka po naskenování QR)
+  // =====================
+  if (stage === STAGE_INSTALL) {
+    return (
+      <div className="screen install-screen">
+        <div className="install-card">
+          <div className="install-badge">🦇 PWA Mobilní Hra</div>
+          
+          <div className="logo-treasure" style={{ margin: '10px 0' }}>
+            <span className="logo-icon-big" style={{ fontSize: '56px' }}>🦇</span>
+            <h1 className="logo-title" style={{ fontSize: '28px' }}>SCAVENGER</h1>
+            <h1 className="logo-title logo-title-accent" style={{ fontSize: '28px' }}>HUNT</h1>
+          </div>
+
+          <p className="install-desc">
+            Vítej v detektivní hře! Hledej ukryté předměty a nech je ověřit umělou inteligencí přímo foťákem mobilu.
+          </p>
+
+          <div className="install-actions">
+            <button className="install-btn-main" onClick={handleInstallClick}>
+              📲 Nainstalovat do mobilu
+            </button>
+            <button className="install-btn-sub" onClick={() => setStage(STAGE_BLACK)}>
+              🎮 Hrát rovnou v prohlížeči ➡️
+            </button>
+          </div>
+
+          {/* Návod pro iPhone / Safari */}
+          {showIosGuide && (
+            <div className="ios-guide-modal">
+              <div className="ios-guide-box">
+                <h3>📲 Jak nainstalovat na iPhone:</h3>
+                <ol>
+                  <li>Klikni v Safari dole na tlačítko <b>Sdílet ⎋</b></li>
+                  <li>Sjeď níže a klikni na <b>Přidat na plochu ⊞</b></li>
+                  <li>Potvrď kliknutím na <b>Přidat</b> vpravo nahoře</li>
+                </ol>
+                <button className="action-btn-secondary" onClick={() => setShowIosGuide(false)}>
+                  Rozumím 👍
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
 
   // =====================
   // RENDER: BLACK SCREEN
