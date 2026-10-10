@@ -14,45 +14,40 @@ const STAGE_REVIEW = 'review'
 
 const ACCESS_PIN = '1110'      
 
-// Challenges configuration - Těžší hádanky s místnostmi v domě
+// Challenges configuration - Těžší hádanky s hádankami o místnostech
 const CHALLENGES = [
   {
     id: 1,
     hint: "HÁDANKA: Čím déle a víc mi sloužíš, tím jsem kratší a menší. Mám grafitové srdce sevřené v dřevěném těle. Mluvím beze slov a má stopa snadno zmizí pod kouzelnou pryží. Co jsem?",
-    room: "Pracovna / Dětský pokoj",
-    locationHint: "Hledej na psacím stole, v penálu nebo mezi sešity.",
+    roomRiddle: "Hledej v místnosti, kde se rodí úkoly, kresby a myšlenky. Sídlí tu stůl, lampa a ticho pro soustředění.",
     name: "Tužka",
     keywords: ["pencil", "pen", "quill", "ballpoint", "writing", "marker", "crayon", "rubber eraser"]
   },
   {
     id: 2,
     hint: "HÁDANKA: Mám kovové zuby bez čelistí a tělo ze železa. Dokážu spoutat i osvobodit celé domy a pokoje. Cinkám v temnotě kapes a nosím v sobě tajemství zámků. Co jsem?",
-    room: "Předsíň / Chodba",
-    locationHint: "Odpočívám v misce u vchodových dveří, visím na věšáku nebo v kapse kabátu.",
+    roomRiddle: "První místo, které tě v domě přivítá z dalekých cest, a poslední, odkud vyrážíš ven do světa.",
     name: "Klíče",
     keywords: ["key", "keys", "lock", "padlock", "chain", "hook"]
   },
   {
     id: 3,
     hint: "HÁDANKA: Mám jediné ucho, kterým nikdy nic neuslyším, a hluboké břicho, do kterého rád pojmu vařící lázeň. Každé ráno líbám tvé rty a zahřívám tvé zkřehlé dlaně. Co jsem?",
-    room: "Kuchyně",
-    locationHint: "Hledej poblíž rychlovarné konvice, kávovaru, v poličce nebo u dřezu.",
+    roomRiddle: "Království ohně, vody a vůní, kde se chlad potkává s žárem a hlad se mění v plné břicho.",
     name: "Hrneček",
     keywords: ["cup", "mug", "coffee", "coffeepot", "coffee mug", "espresso", "teapot", "pitcher"]
   },
   {
     id: 4,
     hint: "HÁDANKA: Mám stovky listů, ale nesmáčel mě déšť. Mám pevný hřbet, ale nemám kosti ani páteř. Když mě otevřeš, promluvím k tobě hlasy lidí z dávných časů a cizích světů. Co jsem?",
-    room: "Obývací pokoj / Knihovna",
-    locationHint: "Hledej v polici s knihami, na konferenčním stolku nebo u pohovky.",
+    roomRiddle: "Srdce odpočinku a příběhů, kde měkké polštáře a police plné vědomostí zvou k lenošení a rozjímání.",
     name: "Kniha",
     keywords: ["book", "notebook", "binder", "bookcase", "library", "book jacket", "comic book", "paperback"]
   },
   {
     id: 5,
     hint: "HÁDANKA: Chodíme vždycky v páru, ale nikdy se nepředběhneme. Máme jazyk, kterým nikdy nepromluvíme, a desítky očí svázaných šňůrkou. Chráníme tvé nohy před chladem a kameny. Co jsme?",
-    room: "Zádveří / Vstupní hala",
-    locationHint: "Hledej u vchodu, na rohožce nebo v botníku na zemi.",
+    roomRiddle: "Práh mezi domovem a ulicí. Místo, kde odkládáš těžké kroky z celého dne přímo k zemi.",
     name: "Boty",
     keywords: ["shoe", "shoes", "boot", "sneaker", "running shoe", "loafer", "sandal", "clog", "cowboy boot", "tennis shoe"]
   }
@@ -277,12 +272,12 @@ Pokud je požadovaný předmět na fotce skutečně vidět (i částečně, v ru
         if (result.isMatch) {
           setMatchResult({
             success: true,
-            message: `✨ Gemini AI: ${result.comment || `Skvěle, to je ${currentChallenge.name}!`}`
+            message: 'Správně!'
           })
         } else {
           setMatchResult({
             success: false,
-            message: `❌ Gemini AI: ${result.comment || `Tohle nevypadá jako ${currentChallenge.name}. Vidím spíše: ${result.detected || 'něco jiného'}.`}`
+            message: 'Špatně! Zkus to znovu.'
           })
         }
         setComparing(false)
@@ -311,14 +306,12 @@ Pokud je požadovaný předmět na fotce skutečně vidět (i částečně, v ru
       const predictions = await m.classify(img, 5)
       const keywords = currentChallenge.keywords || []
       let matched = false
-      let bestMatch = ''
 
       for (const pred of predictions) {
         const className = pred.className.toLowerCase()
         for (const keyword of keywords) {
           if (className.includes(keyword.toLowerCase())) {
             matched = true
-            bestMatch = pred.className
             break
           }
         }
@@ -328,20 +321,19 @@ Pokud je požadovaný předmět na fotce skutečně vidět (i částečně, v ru
       if (matched) {
         setMatchResult({
           success: true,
-          message: `✅ AI rozpoznala: "${bestMatch}" — Správně! To je ${currentChallenge.name}!`
+          message: 'Správně!'
         })
       } else {
-        const topGuess = predictions[0]?.className || '???'
         setMatchResult({
           success: false,
-          message: `❌ AI vidí: "${topGuess}" — To nevypadá jako ${currentChallenge.name}. Zkus to znovu!`
+          message: 'Špatně! Zkus to znovu.'
         })
       }
     } catch (err) {
       console.error('All AI checks failed:', err)
       setMatchResult({
         success: true,
-        message: `📸 Vyfoceno! (AI kontrola byla přeskočena, fotku zkontroluje Pán Jeskyně.)`
+        message: 'Správně!'
       })
     } finally {
       setComparing(false)
@@ -703,22 +695,22 @@ Pokud je požadovaný předmět na fotce skutečně vidět (i částečně, v ru
           <div className="hint-card">
             <p className="hint-text">{currentChallenge.hint}</p>
 
-            {/* Odkrývací nápověda s místností */}
+            {/* Odkrývací nápověda s hádankou o místnosti */}
             <div className="location-reveal-container">
               {!showLocationHint ? (
                 <button
                   className="reveal-hint-btn"
                   onClick={() => setShowLocationHint(true)}
                 >
-                  🔍 Zobrazit nápovědu místnosti
+                  🔍 Zobrazit nápovědu k místnosti
                 </button>
               ) : (
                 <div className="location-revealed-box">
                   <div className="location-room-tag">
-                    🏠 <b>Místnost:</b> {currentChallenge.room}
+                    🗝️ <b>Záhada místnosti:</b>
                   </div>
                   <p className="location-detail-text">
-                    📍 {currentChallenge.locationHint}
+                    {currentChallenge.roomRiddle}
                   </p>
                   <button
                     className="hide-hint-link"
