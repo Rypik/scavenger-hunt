@@ -196,15 +196,84 @@ body {
 
 .hint-text {
   font-size: 13px;
-  line-height: 1.35;
+  line-height: 1.4;
   color: var(--text);
   margin-bottom: 0;
 }
 
-.location-text {
-  color: var(--text-muted);
-  margin-top: 4px;
+/* ========================
+   REVEALABLE LOCATION HINT
+   ======================== */
+.location-reveal-container {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.reveal-hint-btn {
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px dashed var(--primary);
+  color: #c084fc;
+  padding: 6px 14px;
+  border-radius: 8px;
   font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+
+.reveal-hint-btn:active {
+  background: rgba(168, 85, 247, 0.25);
+  transform: scale(0.98);
+}
+
+.location-revealed-box {
+  width: 100%;
+  background: rgba(234, 179, 8, 0.08);
+  border: 1px solid rgba(234, 179, 8, 0.35);
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: fadeIn 0.25s ease;
+}
+
+.location-room-tag {
+  color: #fef08a;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.location-detail-text {
+  color: #d4d4d4;
+  font-size: 11px;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.hide-hint-link {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 10px;
+  cursor: pointer;
+  text-align: right;
+  margin-top: 2px;
+  padding: 0;
+  align-self: flex-end;
+}
+
+.hide-hint-link:active {
+  color: #fff;
 }
 
 /* ========================

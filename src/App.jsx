@@ -14,40 +14,45 @@ const STAGE_REVIEW = 'review'
 
 const ACCESS_PIN = '1110'      
 
-// Challenges configuration
+// Challenges configuration - Těžší hádanky s místnostmi v domě
 const CHALLENGES = [
   {
     id: 1,
-    hint: "HÁDANKA: Jsem štíhlá, dřevěná a ráda kreslím. Nechávám za sebou stopu. Když udělám chybu, guma mě zachrání. Co jsem?",
-    locationHint: "LOKACE: Hledej mě na stole, v penálu nebo tam, kde se obvykle píšou úkoly.",
+    hint: "HÁDANKA: Čím déle a víc mi sloužíš, tím jsem kratší a menší. Mám grafitové srdce sevřené v dřevěném těle. Mluvím beze slov a má stopa snadno zmizí pod kouzelnou pryží. Co jsem?",
+    room: "Pracovna / Dětský pokoj",
+    locationHint: "Hledej na psacím stole, v penálu nebo mezi sešity.",
     name: "Tužka",
     keywords: ["pencil", "pen", "quill", "ballpoint", "writing", "marker", "crayon", "rubber eraser"]
   },
   {
     id: 2,
-    hint: "HÁDANKA: Mám zuby, ale nekoušu. Zvoním v kapse a umím otevírat cestu domů. Co jsem?",
-    locationHint: "LOKACE: Většinou odpočívám u vchodových dveří, v misce nebo visím na háčku.",
+    hint: "HÁDANKA: Mám kovové zuby bez čelistí a tělo ze železa. Dokážu spoutat i osvobodit celé domy a pokoje. Cinkám v temnotě kapes a nosím v sobě tajemství zámků. Co jsem?",
+    room: "Předsíň / Chodba",
+    locationHint: "Odpočívám v misce u vchodových dveří, visím na věšáku nebo v kapse kabátu.",
     name: "Klíče",
     keywords: ["key", "keys", "lock", "padlock", "chain", "hook"]
   },
   {
     id: 3,
-    hint: "HÁDANKA: Mám ouško, ale neslyším. Každé ráno tě dokážu zahřát a probudit k životu. Co jsem?",
-    locationHint: "LOKACE: Hledej mě v kuchyni poblíž konvice, kávovaru nebo v poličce.",
+    hint: "HÁDANKA: Mám jediné ucho, kterým nikdy nic neuslyším, a hluboké břicho, do kterého rád pojmu vařící lázeň. Každé ráno líbám tvé rty a zahřívám tvé zkřehlé dlaně. Co jsem?",
+    room: "Kuchyně",
+    locationHint: "Hledej poblíž rychlovarné konvice, kávovaru, v poličce nebo u dřezu.",
     name: "Hrneček",
     keywords: ["cup", "mug", "coffee", "coffeepot", "coffee mug", "espresso", "teapot", "pitcher"]
   },
   {
     id: 4,
-    hint: "HÁDANKA: Mám listy, ale nejsem strom. Mám hřbet, ale nemám kosti. Ukrývám mnoho příběhů. Co jsem?",
-    locationHint: "LOKACE: Hledej mě v knihovně, na poličce nebo u postele na nočním stolku.",
+    hint: "HÁDANKA: Mám stovky listů, ale nesmáčel mě déšť. Mám pevný hřbet, ale nemám kosti ani páteř. Když mě otevřeš, promluvím k tobě hlasy lidí z dávných časů a cizích světů. Co jsem?",
+    room: "Obývací pokoj / Knihovna",
+    locationHint: "Hledej v polici s knihami, na konferenčním stolku nebo u pohovky.",
     name: "Kniha",
     keywords: ["book", "notebook", "binder", "bookcase", "library", "book jacket", "comic book", "paperback"]
   },
   {
     id: 5,
-    hint: "HÁDANKA: Chodíme vždycky v páru. Nosíme tě celý den, ačkoliv máme jen jeden jazyk. Co jsme?",
-    locationHint: "LOKACE: Hledej nás tam, kde končí tvá cesta domů – v botníku nebo u dveří na zemi.",
+    hint: "HÁDANKA: Chodíme vždycky v páru, ale nikdy se nepředběhneme. Máme jazyk, kterým nikdy nepromluvíme, a desítky očí svázaných šňůrkou. Chráníme tvé nohy před chladem a kameny. Co jsme?",
+    room: "Zádveří / Vstupní hala",
+    locationHint: "Hledej u vchodu, na rohožce nebo v botníku na zemi.",
     name: "Boty",
     keywords: ["shoe", "shoes", "boot", "sneaker", "running shoe", "loafer", "sandal", "clog", "cowboy boot", "tennis shoe"]
   }
@@ -134,6 +139,7 @@ function App() {
   const [model, setModel] = useState(null)
   const [isModelLoading, setIsModelLoading] = useState(false)
   const [warningMessage, setWarningMessage] = useState(null)
+  const [showLocationHint, setShowLocationHint] = useState(false)
 
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
@@ -434,6 +440,7 @@ Pokud je požadovaný předmět na fotce skutečně vidět (i částečně, v ru
       setCurrentChallengeIndex(prev => prev + 1)
       setCapturedImage(null)
       setMatchResult(null)
+      setShowLocationHint(false)
       startCamera()
     } else {
       setStage(STAGE_REVIEW)
@@ -695,7 +702,33 @@ Pokud je požadovaný předmět na fotce skutečně vidět (i částečně, v ru
           </div>
           <div className="hint-card">
             <p className="hint-text">{currentChallenge.hint}</p>
-            <p className="hint-text location-text">{currentChallenge.locationHint}</p>
+
+            {/* Odkrývací nápověda s místností */}
+            <div className="location-reveal-container">
+              {!showLocationHint ? (
+                <button
+                  className="reveal-hint-btn"
+                  onClick={() => setShowLocationHint(true)}
+                >
+                  🔍 Zobrazit nápovědu místnosti
+                </button>
+              ) : (
+                <div className="location-revealed-box">
+                  <div className="location-room-tag">
+                    🏠 <b>Místnost:</b> {currentChallenge.room}
+                  </div>
+                  <p className="location-detail-text">
+                    📍 {currentChallenge.locationHint}
+                  </p>
+                  <button
+                    className="hide-hint-link"
+                    onClick={() => setShowLocationHint(false)}
+                  >
+                    Ukrýt nápovědu ✕
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

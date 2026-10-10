@@ -1,10 +1,49 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#6366f1"/>
-      <stop offset="100%" stop-color="#818cf8"/>
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="65%">
+      <stop offset="0%" stop-color="#2a0845"/>
+      <stop offset="70%" stop-color="#0f071e"/>
+      <stop offset="100%" stop-color="#05020a"/>
+    </radialGradient>
+    <linearGradient id="batGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c084fc"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#7e22ce"/>
     </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#a855f7" flood-opacity="0.6"/>
+    </filter>
   </defs>
-  <rect width="100" height="100" rx="20" fill="url(#g)"/>
-  <text x="50" y="68" text-anchor="middle" font-size="50" font-family="Arial" font-weight="bold" fill="white">⚡</text>
+  
+  <!-- Background with rounded corners -->
+  <rect width="512" height="512" rx="115" fill="url(#bgGlow)"/>
+  <rect width="512" height="512" rx="115" fill="none" stroke="#a855f7" stroke-width="8" stroke-opacity="0.4"/>
+
+  <!-- Glowing Bat Symbol -->
+  <g filter="url(#shadow)">
+    <!-- Stylized Geometric Bat Wings & Body -->
+    <path d="M 256 160 
+             C 264 135, 275 125, 285 125 
+             C 280 150, 295 165, 330 160 
+             C 380 150, 440 180, 475 250 
+             C 410 235, 365 265, 345 320 
+             C 325 285, 285 295, 256 345 
+             C 227 295, 187 285, 167 320 
+             C 147 265, 102 235, 37 250 
+             C 72 180, 132 150, 182 160 
+             C 217 165, 232 150, 227 125 
+             C 237 125, 248 135, 256 160 Z" 
+          fill="url(#batGlow)" />
+          
+    <!-- Bat Head & Ears -->
+    <polygon points="238,185 248,145 256,170 264,145 274,185" fill="#f3e8ff"/>
+    <!-- Glowing Eyes -->
+    <circle cx="249" cy="178" r="4" fill="#fbbf24"/>
+    <circle cx="263" cy="178" r="4" fill="#fbbf24"/>
+  </g>
+
+  <!-- Accent stars / sparkle -->
+  <circle cx="120" cy="120" r="3" fill="#c084fc" opacity="0.6"/>
+  <circle cx="390" cy="110" r="4" fill="#c084fc" opacity="0.8"/>
+  <circle cx="410" cy="390" r="3" fill="#c084fc" opacity="0.5"/>
 </svg>
